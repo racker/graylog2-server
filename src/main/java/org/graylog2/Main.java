@@ -23,6 +23,8 @@ package org.graylog2;
 import org.apache.log4j.Logger;
 import org.graylog2.database.MongoConnection;
 import org.graylog2.messagehandlers.amqp.AMQP;
+import org.graylog2.forwarders.forwarders.LogglyForwarder;
+import org.graylog2.messagehandlers.scribe.ScribeServer;
 import org.graylog2.messagehandlers.amqp.AMQPBroker;
 import org.graylog2.messagehandlers.amqp.AMQPSubscribedQueue;
 import org.graylog2.messagehandlers.amqp.AMQPSubscriberThread;
@@ -137,10 +139,12 @@ public final class Main {
             System.exit(1); // Exit with error.
         }
 
-        // Print out a deprecation warning if "rrd_storage_dir" is set.
-        if (Main.masterConfig.getProperty("rrd_storage_dir") != null) {
-            LOG.warn("[!] Deprecation warning: Config parameter rrd_storage_dir is no longer needed.");
+
+        // Initialize Scribe if enabled
+        if(Main.masterConfig.getProperty("scribe_enabled") == null) {
+            initializeScribe(Main.masterConfig);
         }
+        
 
         // Write a PID file.
         try {
@@ -252,6 +256,24 @@ public final class Main {
         // Start thread that stores throughput info.
         ThroughputWriterThread throughputThread = new ThroughputWriterThread();
         throughputThread.start();
+    }
+
+    private static void initializeScribe(Properties configuration) {
+        // Start up the scribe server
+        ScribeServer scribeServer = new ScribeServer(
+                                               configuration.getProperty("scribe_host"),
+                                               (configuration.getProperty("scribe_port") == null) ? 0 : Integer.parseInt(configuration.getProperty("scribe_port")),
+                                               (configuration.getProperty("scribe_rpc_timeout") == null) ? 15000 : Integer.parseInt(configuration.getProperty("scribe_rpc_timeout")),
+                                               (configuration.getProperty("scribe_thrift_length") == null) ? 15000 : Integer.parseInt(configuration.getProperty("scribe_thrift_length")),
+                                               (configuration.getProperty("scribe_min_threads") == null) ? 5 : Integer.parseInt(configuration.getProperty("scribe_min_threads")),
+                                               (configuration.getProperty("scribe_max_threads") == null) ? 10 : Integer.parseInt(configuration.getProperty("scribe_max_threads"))
+                                                 );
+        scribeServer.run();
+        LOG.info("Scribe threads started.");
+    }
+    
+    
+    private static void savePidFile(String pidFile) {
 
         // Start thread that stores system information periodically.
         ServerValueWriterThread serverValueThread = new ServerValueWriterThread();
@@ -259,5 +281,5 @@ public final class Main {
 
         LOG.info("[x] Graylog2 up and running.");
     }
-
 }
+
