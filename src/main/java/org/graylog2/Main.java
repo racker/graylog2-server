@@ -256,6 +256,12 @@ public final class Main {
         // Start thread that stores throughput info.
         ThroughputWriterThread throughputThread = new ThroughputWriterThread();
         throughputThread.start();
+        
+        // Start thread that stores system information periodically.
+        ServerValueWriterThread serverValueThread = new ServerValueWriterThread();
+        serverValueThread.start();
+
+        LOG.info("[x] Graylog2 up and running.");
     }
 
     private static void initializeScribe(Properties configuration) {
@@ -274,13 +280,6 @@ public final class Main {
     }
     
     
-    private static void savePidFile(String pidFile) {
 
-        // Start thread that stores system information periodically.
-        ServerValueWriterThread serverValueThread = new ServerValueWriterThread();
-        serverValueThread.start();
-
-        LOG.info("[x] Graylog2 up and running.");
-    }
 }
 
