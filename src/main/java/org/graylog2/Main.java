@@ -141,7 +141,7 @@ public final class Main {
 
 
         // Initialize Scribe if enabled
-        if(Main.masterConfig.getProperty("scribe_enabled") == null) {
+        if(Main.masterConfig.getProperty("scribe_enabled") != null) {
             initializeScribe(Main.masterConfig);
         }
         
