@@ -268,7 +268,8 @@ public final class Main {
                                                (configuration.getProperty("scribe_min_threads") == null) ? 5 : Integer.parseInt(configuration.getProperty("scribe_min_threads")),
                                                (configuration.getProperty("scribe_max_threads") == null) ? 10 : Integer.parseInt(configuration.getProperty("scribe_max_threads"))
                                                  );
-        scribeServer.run();
+        Thread sc_thread = new Thread(scribeServer, "Scribe Server");
+        sc_thread.start();
         LOG.info("Scribe threads started.");
     }
     
