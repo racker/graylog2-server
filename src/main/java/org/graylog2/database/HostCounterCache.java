@@ -20,6 +20,7 @@
 
 package org.graylog2.database;
 
+import java.lang.Integer;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -56,13 +57,18 @@ public class HostCounterCache {
      * @param hostname The host of which the counter to increment.
      */
     public void increment(String hostname) {
-        int old = 0;
+        Integer old, value;
 
-        if (this.cache.containsKey(hostname)) {
-            old = this.cache.get(hostname);
+        old = this.cache.get(hostname);
+
+        if (old == null) {
+            value = 1;
+        }
+        else {
+            value = old + 1;
         }
 
-        this.cache.put(hostname, old+1);
+        this.cache.put(hostname, value);
     }
 
     /**
@@ -71,9 +77,7 @@ public class HostCounterCache {
      * @param hostname The host of which the counter to reset.
      */
     public void reset(String hostname) {
-        if (this.cache.containsKey(hostname)) {
-            this.cache.remove(hostname);
-        }
+        this.cache.remove(hostname);
     }
 
     /**
@@ -83,7 +87,15 @@ public class HostCounterCache {
      * @return
      */
     public int getCount(String hostname) {
-        return this.cache.get(hostname) == null ? 0 : this.cache.get(hostname);
+        Integer result;
+
+        result = this.cache.get(hostname);
+
+        if (result == null) {
+            return 0;
+        }
+
+        return result;
     }
 
     /**
@@ -94,5 +106,4 @@ public class HostCounterCache {
     public Set<String> getAllHosts() {
         return this.cache.keySet();
     }
-
 }
