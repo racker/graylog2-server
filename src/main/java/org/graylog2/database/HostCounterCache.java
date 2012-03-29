@@ -57,10 +57,18 @@ public class HostCounterCache {
      * @param hostname The host of which the counter to increment.
      */
     public void increment(String hostname) {
-        Integer old;
+        Integer old, value;
 
         old = this.cache.get(hostname);
-        this.cache.put(hostname, (old) ? (old + 1) : 1);
+
+        if (old == null) {
+            value = 1;
+        }
+        else {
+            value = old + 1;
+        }
+
+        this.cache.put(hostname, value);
     }
 
     /**
