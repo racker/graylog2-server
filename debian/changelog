@@ -1,0 +1,5 @@
+graylog2-server (0.9.7-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Jordan Evans <jordan.evans@rackspace.com>  Fri, 27 Jul 2012 22:45:07 +0200

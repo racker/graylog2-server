@@ -1,0 +1,6 @@
+#!/bin/bash
+
+rm /opt/graylog2/graylog2-server.jar
+rm /opt/graylog2
+ln -s /opt/graylog2-server-0.9.7 /opt/graylog2
+ln -s /opt/graylog2/graylog2-server-jar-with-dependencies.jar /opt/graylog2/graylog2-server.jar
