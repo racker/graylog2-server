@@ -1,0 +1,13 @@
+Source: graylog2-server
+Section: unknown
+Priority: extra
+Maintainer: Jordan Evans <jordan.evans@rackspace.com>
+Build-Depends: debhelper (>= 7), maven2, openjdk-6-jdk
+Standards-Version: 3.8.3
+Homepage: <insert the upstream URL, if relevant>
+
+Package: graylog2-server
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: <insert up to 60 chars description>
+ <insert long description, indented with spaces>
