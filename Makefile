@@ -2,8 +2,8 @@ NAME=graylog2-server
 PREFIX=/usr
 DESTDIR=
 
-SERVER_W_DEP=target/graylog2-server-0.9.6-jar-with-dependencies.jar
-SERVER=target/graylog2-server-0.9.6.jar
+SERVER_W_DEP=target/graylog2-server-0.9.7-dev-jar-with-dependencies.jar
+SERVER=target/graylog2-server-0.9.7.jar
 SYSLOG4J=lib/syslog4j-0.9.46-bin.jar
 INITD=contrib/distro/generic/graylog2-server.init.d
 CONF=misc/graylog2.conf
@@ -15,6 +15,7 @@ all: $(SERVER) $(SERVER_W_DEP) prepare
 all: $(SERVER) $(SERVER_W_DEP) test
 
 $(SERVER) $(SERVER_W_DEP):
+	mvn install:install-file $(MVN_OPTS) -DgroupId=org.syslog4j -DartifactId=syslog4j -Dversion=0.9.46 -Dpackaging=jar -Dfile=lib/syslog4j-0.9.46-bin.jar
 	mvn $(MVN_OPTS) assembly:assembly
 
 prepare:

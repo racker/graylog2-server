@@ -1,1 +1,1 @@
-target/graylog2-server-jar-with-dependencies.jar /opt/graylog2-server-0.9.7/
+target/graylog2-server-0.9.7-dev-jar-with-dependencies.jar /opt/graylog2-server-0.9.7/
