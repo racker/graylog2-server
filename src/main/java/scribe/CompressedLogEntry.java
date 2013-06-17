@@ -30,20 +30,20 @@ import java.util.Arrays;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fields>, java.io.Serializable, Cloneable {
-  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("LogEntry");
+public class CompressedLogEntry implements org.apache.thrift.TBase<CompressedLogEntry, CompressedLogEntry._Fields>, java.io.Serializable, Cloneable {
+  private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("CompressedLogEntry");
 
   private static final org.apache.thrift.protocol.TField CATEGORY_FIELD_DESC = new org.apache.thrift.protocol.TField("category", org.apache.thrift.protocol.TType.STRING, (short)1);
   private static final org.apache.thrift.protocol.TField MESSAGE_FIELD_DESC = new org.apache.thrift.protocol.TField("message", org.apache.thrift.protocol.TType.STRING, (short)2);
 
   private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
   static {
-    schemes.put(StandardScheme.class, new LogEntryStandardSchemeFactory());
-    schemes.put(TupleScheme.class, new LogEntryTupleSchemeFactory());
+    schemes.put(StandardScheme.class, new CompressedLogEntryStandardSchemeFactory());
+    schemes.put(TupleScheme.class, new CompressedLogEntryTupleSchemeFactory());
   }
 
   public String category; // required
-  public String message; // required
+  public ByteBuffer message; // required
 
   /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
   public enum _Fields implements org.apache.thrift.TFieldIdEnum {
@@ -113,17 +113,17 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
     tmpMap.put(_Fields.CATEGORY, new org.apache.thrift.meta_data.FieldMetaData("category", org.apache.thrift.TFieldRequirementType.DEFAULT, 
         new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
     tmpMap.put(_Fields.MESSAGE, new org.apache.thrift.meta_data.FieldMetaData("message", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+        new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING        , true)));
     metaDataMap = Collections.unmodifiableMap(tmpMap);
-    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(LogEntry.class, metaDataMap);
+    org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(CompressedLogEntry.class, metaDataMap);
   }
 
-  public LogEntry() {
+  public CompressedLogEntry() {
   }
 
-  public LogEntry(
+  public CompressedLogEntry(
     String category,
-    String message)
+    ByteBuffer message)
   {
     this();
     this.category = category;
@@ -133,17 +133,18 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
   /**
    * Performs a deep copy on <i>other</i>.
    */
-  public LogEntry(LogEntry other) {
+  public CompressedLogEntry(CompressedLogEntry other) {
     if (other.isSetCategory()) {
       this.category = other.category;
     }
     if (other.isSetMessage()) {
-      this.message = other.message;
+      this.message = org.apache.thrift.TBaseHelper.copyBinary(other.message);
+;
     }
   }
 
-  public LogEntry deepCopy() {
-    return new LogEntry(this);
+  public CompressedLogEntry deepCopy() {
+    return new CompressedLogEntry(this);
   }
 
   @Override
@@ -156,7 +157,7 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
     return this.category;
   }
 
-  public LogEntry setCategory(String category) {
+  public CompressedLogEntry setCategory(String category) {
     this.category = category;
     return this;
   }
@@ -176,11 +177,21 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
     }
   }
 
-  public String getMessage() {
-    return this.message;
+  public byte[] getMessage() {
+    setMessage(org.apache.thrift.TBaseHelper.rightSize(message));
+    return message == null ? null : message.array();
   }
 
-  public LogEntry setMessage(String message) {
+  public ByteBuffer bufferForMessage() {
+    return message;
+  }
+
+  public CompressedLogEntry setMessage(byte[] message) {
+    setMessage(message == null ? (ByteBuffer)null : ByteBuffer.wrap(message));
+    return this;
+  }
+
+  public CompressedLogEntry setMessage(ByteBuffer message) {
     this.message = message;
     return this;
   }
@@ -214,7 +225,7 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
       if (value == null) {
         unsetMessage();
       } else {
-        setMessage((String)value);
+        setMessage((ByteBuffer)value);
       }
       break;
 
@@ -252,12 +263,12 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
   public boolean equals(Object that) {
     if (that == null)
       return false;
-    if (that instanceof LogEntry)
-      return this.equals((LogEntry)that);
+    if (that instanceof CompressedLogEntry)
+      return this.equals((CompressedLogEntry)that);
     return false;
   }
 
-  public boolean equals(LogEntry that) {
+  public boolean equals(CompressedLogEntry that) {
     if (that == null)
       return false;
 
@@ -287,13 +298,13 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
     return 0;
   }
 
-  public int compareTo(LogEntry other) {
+  public int compareTo(CompressedLogEntry other) {
     if (!getClass().equals(other.getClass())) {
       return getClass().getName().compareTo(other.getClass().getName());
     }
 
     int lastComparison = 0;
-    LogEntry typedOther = (LogEntry)other;
+    CompressedLogEntry typedOther = (CompressedLogEntry)other;
 
     lastComparison = Boolean.valueOf(isSetCategory()).compareTo(typedOther.isSetCategory());
     if (lastComparison != 0) {
@@ -332,7 +343,7 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
 
   @Override
   public String toString() {
-    StringBuilder sb = new StringBuilder("LogEntry(");
+    StringBuilder sb = new StringBuilder("CompressedLogEntry(");
     boolean first = true;
 
     sb.append("category:");
@@ -347,7 +358,7 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
     if (this.message == null) {
       sb.append("null");
     } else {
-      sb.append(this.message);
+      org.apache.thrift.TBaseHelper.toString(this.message, sb);
     }
     first = false;
     sb.append(")");
@@ -375,15 +386,15 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
     }
   }
 
-  private static class LogEntryStandardSchemeFactory implements SchemeFactory {
-    public LogEntryStandardScheme getScheme() {
-      return new LogEntryStandardScheme();
+  private static class CompressedLogEntryStandardSchemeFactory implements SchemeFactory {
+    public CompressedLogEntryStandardScheme getScheme() {
+      return new CompressedLogEntryStandardScheme();
     }
   }
 
-  private static class LogEntryStandardScheme extends StandardScheme<LogEntry> {
+  private static class CompressedLogEntryStandardScheme extends StandardScheme<CompressedLogEntry> {
 
-    public void read(org.apache.thrift.protocol.TProtocol iprot, LogEntry struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol iprot, CompressedLogEntry struct) throws org.apache.thrift.TException {
       org.apache.thrift.protocol.TField schemeField;
       iprot.readStructBegin();
       while (true)
@@ -403,7 +414,7 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
             break;
           case 2: // MESSAGE
             if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
-              struct.message = iprot.readString();
+              struct.message = iprot.readBinary();
               struct.setMessageIsSet(true);
             } else { 
               org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
@@ -420,7 +431,7 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
       struct.validate();
     }
 
-    public void write(org.apache.thrift.protocol.TProtocol oprot, LogEntry struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol oprot, CompressedLogEntry struct) throws org.apache.thrift.TException {
       struct.validate();
 
       oprot.writeStructBegin(STRUCT_DESC);
@@ -431,7 +442,7 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
       }
       if (struct.message != null) {
         oprot.writeFieldBegin(MESSAGE_FIELD_DESC);
-        oprot.writeString(struct.message);
+        oprot.writeBinary(struct.message);
         oprot.writeFieldEnd();
       }
       oprot.writeFieldStop();
@@ -440,16 +451,16 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
 
   }
 
-  private static class LogEntryTupleSchemeFactory implements SchemeFactory {
-    public LogEntryTupleScheme getScheme() {
-      return new LogEntryTupleScheme();
+  private static class CompressedLogEntryTupleSchemeFactory implements SchemeFactory {
+    public CompressedLogEntryTupleScheme getScheme() {
+      return new CompressedLogEntryTupleScheme();
     }
   }
 
-  private static class LogEntryTupleScheme extends TupleScheme<LogEntry> {
+  private static class CompressedLogEntryTupleScheme extends TupleScheme<CompressedLogEntry> {
 
     @Override
-    public void write(org.apache.thrift.protocol.TProtocol prot, LogEntry struct) throws org.apache.thrift.TException {
+    public void write(org.apache.thrift.protocol.TProtocol prot, CompressedLogEntry struct) throws org.apache.thrift.TException {
       TTupleProtocol oprot = (TTupleProtocol) prot;
       BitSet optionals = new BitSet();
       if (struct.isSetCategory()) {
@@ -463,12 +474,12 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
         oprot.writeString(struct.category);
       }
       if (struct.isSetMessage()) {
-        oprot.writeString(struct.message);
+        oprot.writeBinary(struct.message);
       }
     }
 
     @Override
-    public void read(org.apache.thrift.protocol.TProtocol prot, LogEntry struct) throws org.apache.thrift.TException {
+    public void read(org.apache.thrift.protocol.TProtocol prot, CompressedLogEntry struct) throws org.apache.thrift.TException {
       TTupleProtocol iprot = (TTupleProtocol) prot;
       BitSet incoming = iprot.readBitSet(2);
       if (incoming.get(0)) {
@@ -476,7 +487,7 @@ public class LogEntry implements org.apache.thrift.TBase<LogEntry, LogEntry._Fie
         struct.setCategoryIsSet(true);
       }
       if (incoming.get(1)) {
-        struct.message = iprot.readString();
+        struct.message = iprot.readBinary();
         struct.setMessageIsSet(true);
       }
     }
