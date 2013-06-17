@@ -36,11 +36,13 @@ import java.util.List;
 
 import scribe.thrift.scribe.Iface;
 import scribe.thrift.LogEntry;
+import scribe.thrift.CompressedLogEntry;
 import scribe.thrift.ResultCode;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.thrift.TException;
+import java.nio.ByteBuffer;
 
 /**
  * ScribeHandler.java:
@@ -57,7 +59,6 @@ public class ScribeHandler implements Iface {
     
     @Override
     public ResultCode Log(List<LogEntry> messages) throws TException {
-        LOG.info("Received " + messages.size() + " messages.");
                 
         for (LogEntry message : messages) {
             LOG.trace("received new scribe message: category= " + message.category + " message= " + message.message);
@@ -72,10 +73,34 @@ public class ScribeHandler implements Iface {
         
         return ResultCode.OK;
     }
+
+    @Override
+    public ResultCode LogCompressed(List<CompressedLogEntry> messages) throws TException {
+
+        for (CompressedLogEntry message : messages) {
+            LOG.trace("received new scribe compressed message: category= " + message.category);
+            try {
+                handleCompressedMessage(message.message);
+            } catch (Exception ex) {
+                LOG.error("Failed to process compressed message: category= " + message.category);
+                ex.printStackTrace();
+                throw new RuntimeException("Exception processing event", ex);
+            }
+        }
+
+        return ResultCode.OK;
+    }
     
     private void handleMessage(String msgBody) throws DataFormatException, UnsupportedEncodingException, InvalidGELFCompressionMethodException, IOException {
         // Handle GELF message.
         SimpleGELFClientHandler gelfHandler = new SimpleGELFClientHandler(new String(msgBody));
         gelfHandler.handle();
     }
+
+    private void handleCompressedMessage(ByteBuffer msg) throws DataFormatException, UnsupportedEncodingException, InvalidGELFCompressionMethodException, IOException {
+        // Handle compressed GELF message.
+        SimpleGELFClientHandler gelfHandler = new SimpleGELFClientHandler(msg);
+        gelfHandler.handle();
+    }
+
 }
