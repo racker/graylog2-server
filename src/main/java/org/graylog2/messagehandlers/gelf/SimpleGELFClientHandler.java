@@ -35,7 +35,6 @@ import java.net.DatagramPacket;
 import java.util.zip.DataFormatException;
 import org.graylog2.messagehandlers.common.RealtimeCollectionUpdateHook;
 import org.graylog2.messagequeue.MessageQueue;
-import java.nio.ByteBuffer;
 
 /**
  * GELFClient.java: Jun 23, 2010 7:15:12 PM
@@ -62,37 +61,7 @@ public class SimpleGELFClientHandler extends GELFClientHandlerBase implements GE
      */
     public SimpleGELFClientHandler(Object clientMessage) throws DataFormatException, InvalidGELFCompressionMethodException, IOException {
 
-        if (clientMessage instanceof ByteBuffer) {
-            ByteBuffer buf = (ByteBuffer) clientMessage;
-
-            byte[] msg = new byte[buf.remaining()];
-            buf.get(msg, 0, buf.remaining());
-
-            // Determine compression type.
-            int type = GELF.getGELFType(msg);
-
-            this.message.setRaw(msg);
-
-            // Decompress.
-            switch (type) {
-                // Decompress ZLIB
-                case GELF.TYPE_ZLIB:
-                    LOG.debug("Handling ZLIB compressed SimpleGELFClient");
-                    this.clientMessage = Tools.decompressZlib(msg);
-                    break;
-
-                // Decompress GZIP
-                case GELF.TYPE_GZIP:
-                    LOG.debug("Handling GZIP compressed SimpleGELFClient");
-                    this.clientMessage = Tools.decompressGzip(msg);
-                    break;
-
-                // Unsupported encoding if not handled by prior cases.
-                default:
-                    throw new UnsupportedEncodingException();
-            }
-
-        } else if (clientMessage instanceof DatagramPacket) {
+        if (clientMessage instanceof DatagramPacket) {
             DatagramPacket msg = (DatagramPacket) clientMessage;
             // Determine compression type.
             int type = GELF.getGELFType(msg.getData());
@@ -125,7 +94,7 @@ public class SimpleGELFClientHandler extends GELFClientHandlerBase implements GE
         }
         
     }
-
+    
     /**
      * Handles the client: Decodes JSON, Stores in Indexer, ReceiveHooks
      * 
