@@ -57,7 +57,6 @@ public class ScribeHandler implements Iface {
     
     @Override
     public ResultCode Log(List<LogEntry> messages) throws TException {
-        LOG.info("Received " + messages.size() + " messages.");
                 
         for (LogEntry message : messages) {
             LOG.trace("received new scribe message: category= " + message.category + " message= " + message.message);
