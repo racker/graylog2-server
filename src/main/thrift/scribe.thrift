@@ -33,14 +33,7 @@ struct LogEntry
   2:  string message
 }
 
-struct CompressedLogEntry
-{
-  1:  string category,
-  2:  binary message
-}
-
 service scribe 
 {
   ResultCode Log(1: list<LogEntry> messages);
-  ResultCode LogCompressed(1: list<CompressedLogEntry> messages);
 }
